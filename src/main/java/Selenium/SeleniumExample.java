@@ -10,33 +10,36 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static Excel.ExcelManager.writeExcelFile;
+
 /**
  * Created by JOJUN on 2020-10-30
+ *
+ *     네이버 지도 검색 후 셀레니움을 이용하여 Title과 Phone을 가져와
+ *     Excel File로 Export 하는 Toy Prject
+ *     Page per 50
+ *     6 Page
+ *     SLEEP_TIME 1000 ms
+ *     takes 20 min
+ *     TODO : 주소 추가, Spring MVC 구조로 변경 , REST
+ *     EntityIframe 로딩이 먹통이 되어 Saving 할 수 없는 상황 발생 -> status code로 판별?
+ *
  */
-@SpringBootApplication
+//@SpringBootApplication
 public class SeleniumExample {
     //WebDriver 설정
     private WebDriver driver;
     private WebElement element;
-    private String serachKey="신림 전자담배";
+    private String serachKey="천안 부동산";
 
     private static int SLEEP_TIME = 1000;
     //Properties 설정
     public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
     public static String WEB_DRIVER_PATH = "C:/chromedriver.exe";
     public static String URL = "https://map.naver.com/v5/";
-    /*
-    * 네이버 지도 검색 후 셀레니움을 이용하여 Title과 Phone을 가져와
-    * Excel File로 Export 하는 Toy Prject
-    * Page per 50
-    * 6 Page
-    * SLEEP_TIME 1000 ms
-    * takes 20 min
-    * TODO : Excel Export, 주소 추가,
-    *  EntityIframe 로딩이 먹통이 되어 Saving 할 수 없는 상황 발생 -> status code로 판별?
-    */
+
     public static void main(String[] args) {
-        SpringApplication.run(SeleniumExample.class);
+//        SpringApplication.run(SeleniumExample.class);
 
         SeleniumExample test = new SeleniumExample();
 
@@ -47,6 +50,7 @@ public class SeleniumExample {
         //System Property SetUp
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
+        
         //Driver SetUp
         ChromeOptions options = new ChromeOptions();
         options.setCapability("ignoreProtectedModeSettings", true);
@@ -105,6 +109,9 @@ public class SeleniumExample {
 
             System.out.println("############### OutPut ############");
             printResult(result);
+
+            // 엑셀 출력
+            writeExcelFile(result);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -184,7 +191,7 @@ public class SeleniumExample {
             }
         return t;
     }
-    // 콘솔출력 TODO : 엑셀로 Export 하기
+    // 콘솔출력
     public void printResult(ArrayList<HashMap<String,String>> result){
         System.out.println("Total Result Count : " + result.size());
         for(HashMap<String,String> hm : result){
